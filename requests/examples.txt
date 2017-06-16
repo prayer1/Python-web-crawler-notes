@@ -1,0 +1,77 @@
+实例1：京东商品页面的爬取
+import requests
+url = "https://item.jd.com/4294930.html"
+def getHTMLTEXT(url):
+    try:
+        r = requests.get(url)
+        r.raise_for_status()
+        r.encoding = r.apparent_encoding
+        print(r.text[:1000])
+    except:
+        return "爬取失败"
+getHTMLTEXT(url)
+
+实例2：亚马逊页面的爬取
+import requests
+url = "https://www.amazon.cn/gp/product/B01M8L5Z3Y"
+def getHTMLTEXT(url):
+    try:
+        kv = {'user-agent': 'Mozilla/5.0'}
+        r = requests.get(url, headers=kv)
+        r.raise_for_status()
+        r.encoding = r.apparent_encoding
+        print(r.text[1000:2000])
+    except:
+        print("爬取失败")
+getHTMLTEXT(url)
+
+实例3：百度/360搜索关键字提交
+百度的关键词接口：
+http://www.baidu.com/s?wd=keyword
+360的关键词接口：
+http://www.so.com/s?q=keyword
+import requests
+url = "http://www.baidu.com/s"
+def getHTMLTEXT(url):
+    try:
+        kv = {'wd': 'python'}#360“wd”改成“q”
+        r = requests.get(url, params=kv)
+        r.encoding = r.apparent_encoding
+        print(r.text)
+    except:
+        print("爬取错误")
+getHTMLTEXT(url)
+
+实例4：网络图片的爬取和存储
+import requests
+import os
+root = "F://images//"
+url = "http://image.nationalgeographic.com.cn/2017/0211/20170211061910157.jpg"
+path = root + url.split('/')[-1]
+try:
+    if not os.path.exists(root):
+        os.mkdir(root)
+    if not os.path.exists(path):
+        r = requests.get(url)
+        r.raise_for_status()
+        r.encoding = r.apparent_encoding
+        with open(path, "wb") as f:
+            f.write(r.content)
+            print("爬取成功")
+    else:
+        print("文件已存在")
+except:
+    print("爬取失败")
+
+实例5：IP地址归属地的自动查询
+http://m.ip138.com/ip.asp?ip=ipaddress
+
+import requests
+url = 'http://m.ip138.com/ip.asp?ip='
+try:
+    r = requests.get(url+'202.204.80.112')
+    r.raise_for_status()
+    r.encoding = r.apparent_encoding
+    print(r.text[-500:])
+except:
+    print("爬取失败")
